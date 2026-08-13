@@ -1,0 +1,6 @@
+DATABASE_URL=mongodb+srv://admin:admin123@cluster0.neodwuk.mongodb.net/CommunityHub
+
+# Clave secreta para firmar y verificar los tokens JWT 
+JWT_SECRET=
+
+PORT=3000 
