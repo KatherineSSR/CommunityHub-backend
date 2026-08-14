@@ -40,10 +40,39 @@ const createEvent = async (req, res) => {
 // GET /api/events
 const getAllEvents = async (req, res) => {
     try {
-        const { category, available } = req.query;
+        const { search, category, date, location, available, owner } = req.query;
         let filter = {};
+
+        // Filtro por Título o Descripción
+        if (search) {
+            filter.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } }
+            ];
+        }
+
+        // Filtros por categoría, dueño y disponibilidad
         if (category) filter.category = category;
+        if (owner) filter.owner = owner;
         if (available === 'true') filter.isActive = true;
+
+        // Filtro por ubicación
+        if (location) {
+            filter.location = { $regex: location, $options: 'i' };
+        }
+
+        // Filtro por fecha
+        if (date) {
+            const startDate = new Date(date);
+            startDate.setHours(0, 0, 0, 0);
+            const endDate = new Date(date);
+            endDate.setHours(23, 59, 59, 999);
+
+            filter.date = {
+                $gte: startDate,
+                $lte: endDate
+            };
+        }
 
         const events = await Event.find(filter)
             .populate('category', 'name')
