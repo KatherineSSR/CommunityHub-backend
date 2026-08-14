@@ -24,5 +24,6 @@ app.use('/api/events', require('./routes/eventRoutes'));
 app.use('/api', require('./routes/registrationRoutes'));
 app.use('/api', require('./routes/favoriteRoutes'));
 app.use('/api/stats', require('./routes/statsRoutes'));
+app.use('/api', require('./routes/notificationRoutes'));
 
 module.exports = app;
