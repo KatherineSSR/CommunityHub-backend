@@ -1,14 +1,20 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../middlewares/upload');
 const authController = require('../controllers/authController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 
-router.post('/register', authController.register);
+// post /api/auth/register 
+router.post('/register', upload.single('profileImage'), authController.register);
 
+//post /api/auth/login 
 router.post('/login', authController.login);
 
-router.get('/me', authController.myProfile);
+//get /api/auth/me 
+router.get('/me', authMiddleware, authController.myProfile);
 
-router.post('/logout', authController.logout);
+//post /api/auth/logout
+router.post('/logout', authMiddleware, authController.logout);
 
 module.exports = router;
