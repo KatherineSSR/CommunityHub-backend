@@ -10,10 +10,10 @@
     "type": "git",
     "url": "git+https://github.com/KatherineSSR/CommunityHub-backend.git"
   },
-  "license": "ISC",
+  "license": "MIT",
   "author": "",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
