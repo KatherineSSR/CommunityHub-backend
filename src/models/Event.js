@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+const EventSchema = new mongoose.Schema({
 
-    tittle: {
+    title: {
         required: true,
         type: String,
         unique: true
@@ -12,14 +12,15 @@ const UserSchema = new mongoose.Schema({
         default: ''
     },
     category: {
-        type: String,
-        default: 'Other'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
     },
     date: {
         type: Date,
         default: Date.now
     },
-    ubication: {
+    location: {
         type: String,
         default: ''
     },
@@ -27,7 +28,7 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 1
     },
-    img: {
+    image: {
         type: String,
         default: ''
     },
@@ -37,7 +38,8 @@ const UserSchema = new mongoose.Schema({
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     creationDate: {
         type: Date,
@@ -46,4 +48,4 @@ const UserSchema = new mongoose.Schema({
 
 });
 
-module.export = mongoose.model('Event', UserSchema);
+module.exports = mongoose.model('Event', EventSchema);
