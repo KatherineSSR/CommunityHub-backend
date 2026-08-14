@@ -3,10 +3,14 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
 
-    username: {
+    name: {
         required: true,
         type: String,
-        unique: true
+    },
+
+    lastName: {
+        required: true,
+        type: String,
     },
 
     password: {
@@ -14,20 +18,10 @@ const UserSchema = new mongoose.Schema({
         default: ''
     },
 
-    googleId: {
-        type: String,
-        default: null
-    },
-
     email: {
         required: true,
         type: String,
         unique: true
-    },
-
-    name: {
-        required: true,
-        type: String
     },
 
     profileImage: {
@@ -42,17 +36,16 @@ const UserSchema = new mongoose.Schema({
 
     role: {
         type: String,
-        enum: ['admin', 'manager', 'user'],
+        enum: ['admin', 'organizer', 'user'],
         default: 'user'
-    },
-
-    //revisar luego
-    favorites: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Event',
-        default: []
     }
+
+
 });
+
+UserSchema.statics.findByEmail = function (email) {
+    return this.findOne({ email });
+};
 
 UserSchema.statics.createUser = function (data) {
     return this.create(data);
