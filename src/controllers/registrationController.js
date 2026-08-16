@@ -98,4 +98,67 @@ const getEventParticipants = async (req, res) => {
     }
 };
 
-module.exports = { registerForEvent, cancelRegistration, getMyRegistrations, getEventParticipants };
+// POST /api/events/:id/certificate
+const requestCertificate = async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        const userId = req.user._id;
+
+        // Verificar que el usuario esté inscrito
+        const registration = await Registration.findOne({ event: eventId, user: userId })
+            .populate('event', 'title date')
+            .populate('user', 'name lastName');
+
+        if (!registration) {
+            return res.status(403).json({ success: false, message: 'Debes estar inscrito en la actividad para solicitar un certificado.' });
+        }
+
+        const event = registration.event;
+        const user = registration.user;
+
+        // Llamar a AWS Lambda con API Gateway
+        const lambdaUrl = process.env.AWS_LAMBDA_CERTIFICATE_URL;
+        if (!lambdaUrl) {
+            return res.status(500).json({ success: false, message: 'La URL de AWS Lambda no está configurada.' });
+        }
+
+        const formattedDate = event.date ? new Date(event.date).toLocaleDateString() : new Date().toLocaleDateString();
+        const fullName = `${user.name} ${user.lastName}`;
+
+        const response = await fetch(lambdaUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userName: fullName,
+                eventName: event.title,
+                date: formattedDate
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al comunicarse con AWS Lambda');
+        }
+
+        const data = await response.json();
+
+        // Genera una notificación después de que Lambda procese la tarea
+        const Notification = require('../models/Notification');
+        await Notification.create({
+            user: userId,
+            message: `¡Tu certificado para el evento "${event.title}" ha sido generado exitosamente gracias a AWS Lambda!`
+        });
+
+        // devolver el PDF al frontend
+        res.json({
+            success: true,
+            message: 'Certificado generado con éxito.',
+            pdfBase64: data.pdfBase64
+        });
+
+    } catch (error) {
+        console.error('Error solicitando certificado:', error);
+        res.status(500).json({ success: false, message: 'Error interno al generar el certificado.' });
+    }
+};
+
+module.exports = { registerForEvent, cancelRegistration, getMyRegistrations, getEventParticipants, requestCertificate };

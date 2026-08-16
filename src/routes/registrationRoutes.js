@@ -10,6 +10,9 @@ router.use(authMiddleware);
 router.post('/events/:id/register', registrationController.registerForEvent);
 router.delete('/events/:id/register', registrationController.cancelRegistration);
 
+// Certificado de inscripción
+router.post('/events/:id/certificate', registrationController.requestCertificate);
+
 // Consultar mis inscripciones
 router.get('/users/me/registrations', registrationController.getMyRegistrations);
 
