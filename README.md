@@ -26,6 +26,7 @@ El proyecto sigue una estructura limpia:
 2. Instala las dependencias:
    ```bash
    npm install
+   npm install multer bcryptjs jsonwebtoken
    ```
 3. Copia el archivo `.env.example` a `.env` y configura tus variables de entorno.
 4. Ejecuta el servidor:
