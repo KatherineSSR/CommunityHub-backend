@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
+const dns = require("dns");
 
-// Esta funcion encapsula la conexion a la base de datos.
+// Configurar servidores DNS 
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
+
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.DATABASE_URL);
