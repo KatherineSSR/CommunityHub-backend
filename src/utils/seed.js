@@ -1,6 +1,10 @@
 require('dotenv').config({ path: __dirname + '/../../.env' });
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const dns = require("dns");
+
+// Configurar servidores DNS 
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 const User = require('../models/User');
 const Category = require('../models/Category');
@@ -12,7 +16,7 @@ const Favorite = require('../models/Favorite');
 const seedDB = async () => {
     try {
         console.log('Conectando a MongoDB...');
-        await mongoose.connect(process.env.MONGODB_URI);
+        await mongoose.connect(process.env.DATABASE_URL);
 
         await Promise.all([
             User.deleteMany(),
