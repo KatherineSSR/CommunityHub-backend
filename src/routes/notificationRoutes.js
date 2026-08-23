@@ -3,9 +3,11 @@ const router = express.Router();
 const notificationController = require('../controllers/notificationController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
-// privadas por usuario
+const roleMiddleware = require('../middlewares/roleMiddleware');
+
 router.use(authMiddleware);
 
-router.get('/users/me/notifications', notificationController.getMyNotifications);
+// Solo los usuarios tienen notificaciones según el documento
+router.get('/users/me/notifications', roleMiddleware('user'), notificationController.getMyNotifications);
 
 module.exports = router;
