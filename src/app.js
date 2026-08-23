@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser.json());
 
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL || 'http://localhost:3001',
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
