@@ -1,4 +1,6 @@
 const Event = require('../models/Event');
+const Registration = require('../models/Registration');
+const Favorite = require('../models/Favorite');
 
 // POST /api/events
 const createEvent = async (req, res) => {
@@ -162,8 +164,12 @@ const deleteEvent = async (req, res) => {
             return res.status(403).json({ success: false, message: 'No tienes permiso para eliminar esta actividad' });
         }
 
+        // Eliminar inscripciones y favoritos asociados 
+        await Registration.deleteMany({ event: event._id });
+        await Favorite.deleteMany({ event: event._id });
+
         await event.deleteOne();
-        res.json({ success: true, message: 'Actividad eliminada correctamente' });
+        res.json({ success: true, message: 'Actividad y sus inscripciones eliminadas correctamente' });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Error al eliminar la actividad' });
     }
