@@ -12,10 +12,13 @@ router.use(authMiddleware);
 router.get('/', eventController.getAllEvents);
 router.get('/:id', eventController.getEventById);
 
-// Solo administradores y organizadores pueden crear, modificar y eliminar
+// Solo administradores y organizadores pueden modificar y eliminar
 const writeRoles = roleMiddleware('admin', 'organizer');
 
-router.post('/', writeRoles, upload.single('image'), eventController.createEvent);
+// Solo organizadores pueden crear
+router.post('/', roleMiddleware('organizer'), upload.single('image'), eventController.createEvent);
+
+// Admin y organizadores pueden modificar/eliminar
 router.put('/:id', writeRoles, upload.single('image'), eventController.updateEvent);
 router.delete('/:id', writeRoles, eventController.deleteEvent);
 

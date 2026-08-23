@@ -7,14 +7,15 @@ const roleMiddleware = require('../middlewares/roleMiddleware');
 router.use(authMiddleware);
 
 // Inscripciones a eventos
-router.post('/events/:id/register', registrationController.registerForEvent);
-router.delete('/events/:id/register', registrationController.cancelRegistration);
+const registerRoles = roleMiddleware('user');
+router.post('/events/:id/register', registerRoles, registrationController.registerForEvent);
+router.delete('/events/:id/register', registerRoles, registrationController.cancelRegistration);
 
 // Certificado de inscripción
-router.post('/events/:id/certificate', registrationController.requestCertificate);
+router.post('/events/:id/certificate', registerRoles, registrationController.requestCertificate);
 
 // Consultar mis inscripciones
-router.get('/users/me/registrations', registrationController.getMyRegistrations);
+router.get('/users/me/registrations', registerRoles, registrationController.getMyRegistrations);
 
 // Consultar participantes de un evento
 router.get('/events/:id/participants', roleMiddleware('organizer'), registrationController.getEventParticipants);
