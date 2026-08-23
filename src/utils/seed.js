@@ -143,6 +143,23 @@ const seedDB = async () => {
             owner: Fernanda._id
         });
 
+        console.log('Creando Evento en el Pasado para Pruebas de Lambda...');
+        const eventoPasado = await Event.create({
+            title: 'Primer Encuentro de la Comunidad (Finalizado)',
+            description: 'Un evento histórico para probar la generación de certificados con AWS Lambda.',
+            category: techCategory._id,
+            date: new Date(new Date().setDate(new Date().getDate() - 10)), // Hace 10 días
+            time: '18:00',
+            location: 'Oficinas Centrales',
+            maxCapacity: 50,
+            owner: Carlos._id
+        });
+
+        await Registration.create({
+            event: eventoPasado._id,
+            user: Maria._id
+        });
+
         console.log('Creando algunas Notificaciones de prueba...');
         await Notification.create({
             user: Maria._id,

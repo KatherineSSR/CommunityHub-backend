@@ -116,6 +116,14 @@ const requestCertificate = async (req, res) => {
         const event = registration.event;
         const user = registration.user;
 
+        // Regla: Solo puede tener certificado de participación si el evento ya sucedió
+        if (new Date(event.date) > new Date()) {
+            return res.status(400).json({
+                success: false,
+                message: 'La actividad aún no se ha realizado. Podrás solicitar tu certificado una vez que haya concluido.'
+            });
+        }
+
         // Llamar a AWS Lambda con API Gateway
         const lambdaUrl = process.env.AWS_LAMBDA_CERTIFICATE_URL;
         if (!lambdaUrl) {
