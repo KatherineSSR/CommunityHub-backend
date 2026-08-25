@@ -62,10 +62,26 @@ const seedDB = async () => {
             role: 'organizer'
         });
 
+        const Laura = await User.create({
+            name: 'Laura',
+            lastName: 'Eventos',
+            email: 'laura@communityhub.com',
+            password: passwordHash,
+            role: 'organizer'
+        });
+
         const Maria = await User.create({
             name: 'Maria',
             lastName: 'Usuario',
             email: 'maria@communityhub.com',
+            password: passwordHash,
+            role: 'user'
+        });
+
+        const Juan = await User.create({
+            name: 'Juan',
+            lastName: 'Perez',
+            email: 'juan@communityhub.com',
             password: passwordHash,
             role: 'user'
         });
@@ -159,6 +175,39 @@ const seedDB = async () => {
             event: eventoPasado._id,
             user: Maria._id
         });
+
+        await Registration.create({
+            event: eventoPasado._id,
+            user: Juan._id
+        });
+
+        const eventoPasado2 = await Event.create({
+            title: 'Taller de Oratoria (Finalizado)',
+            description: 'Curso intensivo de hablar en público y manejo escénico.',
+            category: cultureCategory._id,
+            date: new Date(new Date().setDate(new Date().getDate() - 5)), // Hace 5 días
+            time: '15:00',
+            location: 'Sala 3, Edificio A',
+            maxCapacity: 30,
+            owner: Laura._id
+        });
+
+        const eventoPasado3 = await Event.create({
+            title: 'Seminario de Finanzas Personales (Finalizado)',
+            description: 'Aprende a gestionar tu dinero de manera inteligente y segura.',
+            category: techCategory._id,
+            date: new Date(new Date().setDate(new Date().getDate() - 8)), // Hace 8 días
+            time: '10:00',
+            location: 'Auditorio Principal',
+            maxCapacity: 100,
+            owner: Laura._id
+        });
+
+        await Registration.create({ event: eventoPasado2._id, user: Maria._id });
+        await Registration.create({ event: eventoPasado3._id, user: Maria._id });
+
+        await Registration.create({ event: eventoPasado2._id, user: Juan._id });
+        await Registration.create({ event: eventoPasado3._id, user: Juan._id });
 
         console.log('Creando algunas Notificaciones de prueba...');
         await Notification.create({
