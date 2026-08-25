@@ -127,10 +127,18 @@ const updateEvent = async (req, res) => {
         if (maxCapacity !== undefined && maxCapacity < 0) {
             return res.status(400).json({ success: false, message: 'La capacidad máxima no puede ser negativa' });
         }
-        if (date && new Date(date) < new Date()) {
-            return res.status(400).json({ success: false, message: 'La fecha de la actividad no puede estar en el pasado' });
+        if (date) {
+            const incomingDateStr = new Date(date).toISOString().split('T')[0];
+            const existingDateStr = new Date(event.date).toISOString().split('T')[0];
+
+            if (incomingDateStr !== existingDateStr) {
+                const todayStr = new Date().toISOString().split('T')[0];
+                if (incomingDateStr < todayStr) {
+                    return res.status(400).json({ success: false, message: 'La nueva fecha de la actividad no puede estar en el pasado' });
+                }
+            }
         }
-        // Actualizaciones
+
         if (title) event.title = title;
         if (description !== undefined) event.description = description;
         if (category) event.category = category;
